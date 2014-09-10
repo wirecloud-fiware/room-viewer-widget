@@ -1,6 +1,3 @@
-const PARTICIPANT_MAIN_CLASS = 'participant main';
-const PARTICIPANT_CLASS = 'participant';
-
 var server_URL = 'ws://130.206.81.33:8080/groupcall/ws/websocket';
 var client = new RpcBuilder.clients.JsonRpcClient(server_URL, onRequest, onopen);
 var room_name, username;
@@ -27,7 +24,7 @@ function onopen() {
 
 function onParticipantJoin(request) {
     receiveVideo(request.params.name);
-    MashupPlatform.wiring.pushEvent('participantChange', 'join');
+    MashupPlatform.wiring.pushEvent('participant', 'join');
 }
 
 
@@ -36,7 +33,7 @@ function onParticipantLeft(request) {
     var participant = participants[request.params.name];
     participant.dispose();
     delete participants[request.params.name];
-    MashupPlatform.wiring.pushEvent('participantChange', 'left');
+    MashupPlatform.wiring.pushEvent('participant', 'left');
 }
 
 
@@ -80,7 +77,7 @@ window.onload = function () {
         participants[username] = participant;
         participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
         result.value.forEach(receiveVideo);
-        MashupPlatform.wiring.pushEvent('participantChange', 'join');
+        MashupPlatform.wiring.pushEvent('participant', 'join');
         });
     }
 
