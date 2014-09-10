@@ -2,30 +2,28 @@
 <Template xmlns="http://wirecloud.conwet.fi.upm.es/ns/template#">
     <Catalog.ResourceDescription>
         <Vendor>CoNWeT</Vendor>
-        <Name>room-view</Name>
-        <DisplayName>Room view</DisplayName>
-        <Version>0.0.21</Version>
+        <Name>room_viewer</Name>
+        <DisplayName>Chat Room Viewer</DisplayName>
+        <Version>0.0.1</Version>
         <Author>bgrana</Author>
         <Mail>bgrana@conwet.com</Mail>
-        <Description>Shows an interactive room view.</Description>
+        <Description>A simple widget for watching all participants of a room given.</Description>
         <ImageURI>images/catalogue.png</ImageURI>
         <iPhoneImageURI>images/catalogueSmartphone.png</iPhoneImageURI>
         <WikiURI></WikiURI>
     </Catalog.ResourceDescription>
     <Platform.Preferences>
-        
     </Platform.Preferences>
     <Platform.StateProperties>
-        
     </Platform.StateProperties>
     <Platform.Wiring>
-        <InputEndpoint name="join" type="text" label="Room name, username" description="room_name, username" friendcode="join" />
-        <OutputEndpoint name="participantChange" type="text" label="Participant join or leave" description="Comunicates a participant join or leave" friendcode="pChange" />
-        <OutputEndpoint name="url" type="text" label="Sends URL to main video widget" description="Sends video URL to the main video widget" friendcode="url" />
+        <InputEndpoint name="join_room" type="text" label="New participant" description="Send participant username and room name." friendcode="join_room" />
+        <OutputEndpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="participant" />
+        <OutputEndpoint name="video_url" type="text" label="Send video URL to room" description="Send video URL to chat room widget." friendcode="video_url" />
     </Platform.Wiring>
 
     <Platform.Link>
         <XHTML href="index.html" />
     </Platform.Link>
-    <Platform.Rendering width="40" height="10"/>
+    <Platform.Rendering width="30" height="8"/>
 </Template>
