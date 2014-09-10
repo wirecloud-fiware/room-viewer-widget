@@ -18,7 +18,7 @@
     </Platform.StateProperties>
     <Platform.Wiring>
         <InputEndpoint name="join_room" type="text" label="New participant" description="Send participant username and room name." friendcode="join_room" />
-        <OutputEndpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="participant" />
+        <OutputEndpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="participant_change" />
         <OutputEndpoint name="video_url" type="text" label="Send video URL to room" description="Send video URL to chat room widget." friendcode="video_url" />
     </Platform.Wiring>
 
