@@ -3,14 +3,35 @@
   <head>
   	<meta content="charset=utf-8">
 
-    <link rel="stylesheet" href="dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="dist/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
   	<link rel="stylesheet" href="dist/css/room-viewer-widget.min.css">
 
     <script src="https://rawgit.com/GoogleChrome/webrtc/master/samples/web/js/adapter.js"></script>
     <script src="dist/js/room-viewer-widget.js"></script>
   </head>
   <body>
-  	<div id="participants"></div>
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <p class="navbar-text">Chat Room: <strong id="name">Room1</strong></p>
+        <button id="refresh" type="button" class="btn btn-default navbar-btn navbar-right">
+          <span class="fa fa-sign-out"></span>
+        </button>
+      </div><!-- /.container-fluid -->
+    </div><!-- /.navbar -->
+    <div id="participant-list" class="flex-container">
+      <div class="panel panel-default flex-item">
+        <div class="panel-heading">
+          <span class="panel-title"><span class="fa fa-user"></span> Username</span>
+          <span class="pull-right">
+            <span class="fa fa-video-camera"></span>
+            <span class="fa fa-volume-up"></span>
+          </span>
+        </div>
+        <div class="panel-body">
+        Basic panel example
+        </div>
+      </div>
+    </div>
   </body>
 </html>
