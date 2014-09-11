@@ -1,66 +1,90 @@
-var server_URL = 'ws://130.206.81.33:8080/groupcall/ws/websocket';
-var client = new RpcBuilder.clients.JsonRpcClient(server_URL, onRequest, onopen);
-var room_name, username;
-var participants = [];
-var allow_recv = false;
+/**
+ * @file room-viewer.js
+ * @version 0.0.1
+ * 
+ * @copyright 2014 CoNWeT Lab., Universidad Politécnica de Madrid
+ * @license Apache v2 (https://github.com/Wirecloud/room-viewer-widget/blob/master/LICENSE)
+ */
 
 
-function onRequest(message) {
+/**
+ * Create a new instance of RoomViewer.
+ * 
+ * @class
+ */
+var RoomViewer = function () {
+  var url = 'ws://130.206.81.33:8080/groupcall/ws/websocket';
 
-        if (message.method === "newParticipantArrived") {
-            onParticipantJoin(message);
-        } else if (message.method === "participantLeft") {
-            onParticipantLeft(message);
-        } else {
-            console.error("Unrecognized request: " + JSON.stringify(message));
-        }
-}
+  this.client = new RpcBuilder.clients.JsonRpcClient(url,
+    this.onRequest.bind(this), this.onOpen.bind(this));
 
+  this.container = document.getElementById('participant-list');
+  this.participants = [];
+  this.allow_recv   = false;
 
-function onopen() {
-        allow_recv = true;
-}
+  MashupPlatform.wiring.registerCallback('join_room',
+    this.recv_data.bind(this));
+};
 
+RoomViewer.prototype = {
 
-function onParticipantJoin(request) {
-    receiveVideo(request.params.name);
-    MashupPlatform.wiring.pushEvent('participant', 'join');
-}
+  constructor: RoomViewer,
 
+  onOpen: function () {
+    this.allow_recv = true;
+  },
 
-function onParticipantLeft(request) {
-    console.log('Participant ' + request.params.name + ' left');
-    var participant = participants[request.params.name];
+  onParticipantJoin: function (response) {
+    this.receiveVideo(response.params.name);
+    MashupPlatform.wiring.pushEvent('participant', 'join_room');
+  },
+
+  onParticipantLeft: function (response) {
+    console.log('Participant ' + response.params.name + ' left');
+    var participant = this.participants[response.params.name];
     participant.dispose();
-    delete participants[request.params.name];
-    MashupPlatform.wiring.pushEvent('participant', 'left');
-}
+    delete this.participants[response.params.name];
+    MashupPlatform.wiring.pushEvent('participant', 'left_room');
+  },
 
+  onRequest: function (response) {
+    switch (response.method) {
+      case 'newParticipantArrived':
+        this.onParticipantJoin(response);
+        break;
+      case 'participantLeft':
+        this.onParticipantLeft(response);
+        break;
+      default:
+        console.error('Method not recognized.');
+    }
+  },
 
-window.onload = function () {
-    
-    'use strict';
-    
-    function recv_data(data) {
-        var main_container = document.getElementById('participant-list');
+  receiveVideo: function (sender) {
+    var participant = new Participant(sender),
+        video       = participant.getVideoElement();
 
-        while (main_container.firstChild) {
-            main_container.removeChild(main_container.firstChild);
-            participants = [];
-        }
-        var data = data.split(' ');
-        username  = data[0];
-        room_name = data[1];
-        join_room();
+    this.participants[sender] = participant;
+    participant.rtcPeer = kwsUtils.WebRtcPeer.startRecvOnly(video,
+        participant.offerToReceiveVideo.bind(participant));
+    this.container.appendChild(participant.getElement());
+  },
+
+  recv_data: function (data) {
+    var data = data.split(' ');
+
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
     }
 
+    this.participants = [];
+    join_room(data[0], data[1]);
+  },
 
-    function join_room() {
-        client.sendRequest('joinRoom', {
-            name : username,
-            room : room_name,
-        }, function(error, result) {
-            
+  join_room: function (username, roomname) {
+    client.sendRequest('joinRoom',
+      {name : username, room : roomname},
+      function (error, result) { 
         var constraints = {
             audio : true,
             video : {
@@ -71,24 +95,16 @@ window.onload = function () {
                 }
             }
         };
-            
-        console.log(username + ' registered in room ' + room_name);
-        var participant = new Participant(name);
+
+        console.log(username + ' registered in room ' + roomname);
+        var participant = new Participant(username);
         participants[username] = participant;
-        participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
-        result.value.forEach(receiveVideo);
-        MashupPlatform.wiring.pushEvent('participant', 'join');
-        });
-    }
+        participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(
+            participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
+        result.value.forEach(this.receiveVideo);
+        MashupPlatform.wiring.pushEvent('participant', 'join_room');
+      }.bind(this)
+    );
+  }
 
-
-    function receiveVideo(sender) {
-        var participant = new Participant(sender);
-        participants[sender] = participant;
-        var video = participant.getVideoElement();
-        participant.rtcPeer = kwsUtils.WebRtcPeer.startRecvOnly(video, participant.offerToReceiveVideo.bind(participant));
-    }
-
-
-    MashupPlatform.wiring.registerCallback('join_room', recv_data);
 };
