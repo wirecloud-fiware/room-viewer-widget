@@ -42,7 +42,7 @@ window.onload = function () {
     'use strict';
     
     function recv_data(data) {
-        var main_container = document.getElementById('participants');
+        var main_container = document.getElementById('participant-list');
 
         while (main_container.firstChild) {
             main_container.removeChild(main_container.firstChild);
@@ -113,7 +113,7 @@ function Participant(name) {
 
     container.appendChild(video);
     container.appendChild(span);
-    document.getElementById('participants').appendChild(container);
+    document.getElementById('participant-list').appendChild(container);
 
     span.appendChild(document.createTextNode(name));
 
