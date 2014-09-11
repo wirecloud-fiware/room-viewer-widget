@@ -77,12 +77,13 @@ RoomViewer.prototype = {
       this.container.removeChild(this.container.firstChild);
     }
 
-    this.participants = [];
-    join_room(data[0], data[1]);
+    this.participants = [];    
+    this.update_roomname(data[1]);
+    this.join_room(data[0], data[1]);
   },
 
   join_room: function (username, roomname) {
-    client.sendRequest('joinRoom',
+    this.client.sendRequest('joinRoom',
       {name : username, room : roomname},
       function (error, result) { 
         var constraints = {
@@ -98,13 +99,19 @@ RoomViewer.prototype = {
 
         console.log(username + ' registered in room ' + roomname);
         var participant = new Participant(username);
-        participants[username] = participant;
+        this.participants[username] = participant;
         participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(
             participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
         result.value.forEach(this.receiveVideo);
+        this.container.appendChild(participant.getElement());
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
       }.bind(this)
     );
+  },
+
+  update_roomname: function (roomname) {
+    var room = document.getElementById('name');
+    room.textContent = roomname;
   }
 
 };

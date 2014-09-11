@@ -39,7 +39,7 @@ var Participant = function (username) {
   this.container.appendChild(panelHeading);
   this.container.appendChild(panelBody);
 
-  console.log('The participant ' + this.username + 'was created successfully.'); // DEBUG
+  console.log('The participant ' + this.username + ' was created successfully.'); // DEBUG
 
 };
 
