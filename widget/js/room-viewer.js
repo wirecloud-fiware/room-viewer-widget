@@ -105,7 +105,6 @@ window.onload = function () {
 function Participant(name) {
     this.name = name;
     var container = document.createElement('div');
-    container.className = PARTICIPANT_CLASS;
     container.id = name;
     var span = document.createElement('span');
     var video = document.createElement('video');
