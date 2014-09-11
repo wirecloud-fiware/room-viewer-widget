@@ -31,6 +31,7 @@ module.exports = function(grunt) {
         src: [
           'widget/js/kws-rpc-builder.js',
           'widget/js/kws-utils.js',
+          'widget/js/participant.js',
           'widget/js/room-viewer.js'
         ],
         dest: 'widget/dist/js/<%= pkg.name %>.js'
