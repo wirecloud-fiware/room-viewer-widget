@@ -90,7 +90,7 @@ window.onload = function () {
     }
 
 
-    MashupPlatform.wiring.registerCallback('join', recv_data);
+    MashupPlatform.wiring.registerCallback('join_room', recv_data);
 };
 
 

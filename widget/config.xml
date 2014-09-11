@@ -4,7 +4,7 @@
         <Vendor>CoNWeT</Vendor>
         <Name>room_viewer</Name>
         <DisplayName>Chat Room Viewer</DisplayName>
-        <Version>0.0.1</Version>
+        <Version>0.1.1</Version>
         <Author>bgrana</Author>
         <Mail>bgrana@conwet.com</Mail>
         <Description>A simple widget for watching all participants of a room given.</Description>
