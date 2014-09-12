@@ -114,9 +114,10 @@ RoomViewer.prototype = {
         console.log(username + ' registered in room ' + roomname);
         var participant = new Participant(username, this.client);
         this.participants[username] = participant;
+        result.value.forEach(this.add_participant.bind(this));
         participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(
             participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
-        result.value.forEach(this.receiveVideo);
+        result.value.forEach(this.receiveVideo.bind(this));
         this.container.appendChild(participant.getElement());
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
       }.bind(this)
@@ -126,6 +127,11 @@ RoomViewer.prototype = {
   update_roomname: function (roomname) {
     var room = document.getElementById('name');
     room.textContent = roomname;
+  },
+
+  add_participant: function (participant_name) {
+    var participant = new Participant(participant_name, this.client);
+    this.participants[participant_name] = participant;
   }
 
 };
