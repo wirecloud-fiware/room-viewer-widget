@@ -13,12 +13,13 @@
  * @class
  * @param {String} username - Username of the participant.
  */
-var Participant = function (username) {
+var Participant = function (username, client) {
   var defaultIcon  = '<span class="fa fa-user"></span>',
       panelHeading = document.createElement('div'),
       panelBody    = document.createElement('div');
 
   this.username  = username;
+  this.client    = client;
   this.container = document.createElement('div');
   this.video     = document.createElement('video');
   this.rtcPeer   = {writable: true}; // Object.defineProperty(this, 'rtcPeer', { writable: true});
@@ -63,7 +64,7 @@ Participant.prototype = {
 
   offerToReceiveVideo: function (offerSdp, wp){
     console.log('Invoking SDP offer callback function');
-    client.sendRequest("receiveVideoFrom",
+    this.client.sendRequest("receiveVideoFrom",
       {sender: name, sdpOffer: offerSdp},
       function (error, result) {
         if (error) return console.error(error);

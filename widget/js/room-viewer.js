@@ -75,7 +75,7 @@ RoomViewer.prototype = {
   },
 
   receiveVideo: function (sender) {
-    var participant = new Participant(sender),
+    var participant = new Participant(sender, this.client),
         video       = participant.getVideoElement();
 
     this.participants[sender] = participant;
@@ -112,7 +112,7 @@ RoomViewer.prototype = {
         this.participants = []; 
 
         console.log(username + ' registered in room ' + roomname);
-        var participant = new Participant(username);
+        var participant = new Participant(username, this.client);
         this.participants[username] = participant;
         participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(
             participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
