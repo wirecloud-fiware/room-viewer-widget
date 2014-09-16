@@ -78,7 +78,7 @@ RoomViewer.prototype = {
   recv_data: function (data) {
 
     if (this.exists_prev_room) {
-      this.leave_room().bind(this);
+      this.leave_room();
     }
 
     var data = data.split(' ');
