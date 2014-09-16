@@ -50,8 +50,16 @@ Participant.prototype = {
 
   dispose: function () {
     console.log('Disposing participant ' + this.username);
-    this.rtcPeer.dispose();
-    this.container.parentNode.removeChild(this.container);
+    //this.rtcPeer.dispose();
+    this.client.sendRequest("leaveRoom", {},
+      function (error, result) {
+        if (error) {
+          return console.error("An error occurred while disposing participant " + this.username);
+        }
+        MashupPlatform.wiring.pushEvent('participant', 'left_room');
+        console.log('Participant ' + this.username + ' disposed.');
+      }.bind(this)
+    );
   },
 
   getElement: function () {

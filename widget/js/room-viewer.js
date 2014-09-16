@@ -22,20 +22,11 @@ var RoomViewer = function () {
   this.participants = [];
   this.allow_recv   = false;
   this.username = MashupPlatform.context.get('username');
+  this.exists_prev_room = false;
 
   var leave = document.getElementById('leave');
-  leave.onclick = function () {
-    var participant = this.participants[this.username];
-    participant.dispose();
-    this.participants = [];
-    while (this.container.firstChild) {
-      this.container.removeChild(this.container.firstChild);
-    }
-    console.log('Participant ' + this.username + ' left the room');
-    this.update_roomname('');
-    MashupPlatform.wiring.pushEvent('participant', 'left_room');
-  }
 
+  leave.addEventListener('click', this.leave_room.bind(this), true);
   MashupPlatform.wiring.registerCallback('join_room',
     this.recv_data.bind(this));
 };
@@ -85,8 +76,13 @@ RoomViewer.prototype = {
   },
 
   recv_data: function (data) {
+
+    if (this.exists_prev_room) {
+      this.leave_room().bind(this);
+    }
+
     var data = data.split(' ');
-   
+    this.exists_prev_room = true;
     this.update_roomname(data[1]);
     this.join_room(data[0], data[1]);
   },
@@ -132,6 +128,18 @@ RoomViewer.prototype = {
   add_participant: function (participant_name) {
     var participant = new Participant(participant_name, this.client);
     this.participants[participant_name] = participant;
+  },
+
+  leave_room: function () {
+    console.log('Participant ' + this.username + ' left the room');
+    var participant = this.participants[this.username];
+    participant.dispose();
+    while (this.container.firstChild) {
+      this.container.removeChild(this.container.firstChild);
+    }
+    this.participants = [];
+    this.update_roomname('');
+    this.exists_prev_room = false;
   }
 
 };
