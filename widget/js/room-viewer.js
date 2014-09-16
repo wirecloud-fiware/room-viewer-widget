@@ -131,6 +131,9 @@ RoomViewer.prototype = {
   },
 
   leave_room: function () {
+    if (!this.exists_prev_room) {
+      return;
+    };
     console.log('Participant ' + this.username + ' left the room');
     var participant = this.participants[this.username];
     participant.dispose();
