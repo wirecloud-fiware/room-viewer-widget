@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="room_viewer" version="0.1.4">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="room_viewer" version="0.1.5">
   <details>
     <title>Chat Room Viewer</title>
     <email>bgrana@conwet.com</email>
@@ -11,6 +11,7 @@
   <wiring>
     <outputendpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="participant_change"/>
     <outputendpoint name="video_url" type="text" label="Send video URL to room" description="Send video URL to chat room widget." friendcode="video_url"/>
+    <outputendpoint name="terminate_stream" type="text" label="Terminates video stream" description="Event to terminate video stream when the user leaves the room"/>
     <inputendpoint name="join_room" type="text" label="New participant" description="Send participant username and room name." friendcode="join_room"/>
   </wiring>
   <contents src="index.html"/>

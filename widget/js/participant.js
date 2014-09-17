@@ -57,6 +57,7 @@ Participant.prototype = {
           return console.error("An error occurred while disposing participant " + this.username);
         }
         MashupPlatform.wiring.pushEvent('participant', 'left_room');
+        MashupPlatform.wiring.pushEvent('terminate_stream', '');
         console.log('Participant ' + this.username + ' disposed.');
       }.bind(this)
     );
