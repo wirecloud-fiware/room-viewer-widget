@@ -1,29 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Template xmlns="http://wirecloud.conwet.fi.upm.es/ns/template#">
-    <Catalog.ResourceDescription>
-        <Vendor>CoNWeT</Vendor>
-        <Name>room_viewer</Name>
-        <DisplayName>Chat Room Viewer</DisplayName>
-        <Version>0.1.32</Version>
-        <Author>bgrana</Author>
-        <Mail>bgrana@conwet.com</Mail>
-        <Description>A simple widget for watching all participants of a room given.</Description>
-        <ImageURI>images/catalogue.png</ImageURI>
-        <iPhoneImageURI>images/catalogueSmartphone.png</iPhoneImageURI>
-        <WikiURI></WikiURI>
-    </Catalog.ResourceDescription>
-    <Platform.Preferences>
-    </Platform.Preferences>
-    <Platform.StateProperties>
-    </Platform.StateProperties>
-    <Platform.Wiring>
-        <InputEndpoint name="join_room" type="text" label="New participant" description="Send participant username and room name." friendcode="join_room" />
-        <OutputEndpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="change_participant" />
-        <OutputEndpoint name="video_url" type="text" label="Send video URL to room" description="Send video URL to chat room widget." friendcode="video_url" />
-    </Platform.Wiring>
-
-    <Platform.Link>
-        <XHTML href="index.html" />
-    </Platform.Link>
-    <Platform.Rendering width="8" height="28"/>
-</Template>
+<?xml version='1.0' encoding='UTF-8'?>
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="room_viewer" version="0.1.4">
+  <details>
+    <title>Chat Room Viewer</title>
+    <email>bgrana@conwet.com</email>
+    <image>images/catalogue.png</image>
+    <smartphoneimage>images/catalogueSmartphone.png</smartphoneimage>
+    <description>A simple widget for watching all participants of a room given.</description>
+    <authors>bgrana</authors>
+  </details>
+  <wiring>
+    <outputendpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="participant_change"/>
+    <outputendpoint name="video_url" type="text" label="Send video URL to room" description="Send video URL to chat room widget." friendcode="video_url"/>
+    <inputendpoint name="join_room" type="text" label="New participant" description="Send participant username and room name." friendcode="join_room"/>
+  </wiring>
+  <contents src="index.html"/>
+  <rendering height="8" width="30"/>
+</widget>
