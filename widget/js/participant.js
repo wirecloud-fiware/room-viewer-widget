@@ -83,7 +83,9 @@ Participant.prototype = {
   },
 
   sendURL: function () {
-    MashupPlatform.wiring.pushEvent('video_url', this.video.src);
+
+    var data = this.username + ' ' + this.video.src;
+    MashupPlatform.wiring.pushEvent('video_url', data);
     console.log('The video URL was sent from ' + this.username);
   }
 
