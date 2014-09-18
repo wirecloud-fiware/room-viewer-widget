@@ -28,57 +28,51 @@ body {
 }
 
 .flex-item {
-    flex-basis: 250px;
-    height: 200px;
+    cursor: pointer;
     margin: 0px 10px 20px 10px;
+
+    flex-basis: 250px;
+
+    > .panel-heading {
+        background-color: #fff;
+        color: #333;
+    }
+
+    > .panel-body {
+        padding: 0;
+
+        > video {
+            display: block;
+            width: 100%;
+        }
+    }
+
+    &:hover {
+        border-color: #adadad;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #e6e6e6;
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px #e6e6e6;
+
+        > .panel-heading {
+            background-color: #e6e6e6;
+            border-color: #adadad;
+        }
+    }
+
+    &.active {
+        border-color: #357ebd;        
+
+        > .panel-heading {
+            background-color: #428bca;
+            border-color: #357ebd;  
+            color: #fff;
+        }
+    }
 }
 
-/*body {
-    text-align: center;
-    border: 1px solid #000000;
-}
+@screen-xs-min: 300px;
 
-.container {
-    text-align: center;
-    border: 2px solid #44444F;
-    border-radius: 3px;
+@media (min-width: @screen-xs-min) {
+    .flex-item {
+        flex-basis: 350px;
+    }
 }
-
-.main {
-    margin-top: 5%;
-    margin-left: 20%;
-    margin-right: 20%;
-    width: 59.2%;
-    height: 59.2%;
-}
-
-.main-video {
-    width: 100%;
-    height: 100%;
-}
-
-.participants {
-    margin-top: 5%;
-    margin-left: 5%;
-    margin-right: 5%;
-    margin-bottom: 5%;
-    padding-left: 3%;
-    padding-right: 3%;
-    padding-top: 3%;
-    padding-bottom: 3%;
-    width: 83.2%;
-    height: 13.2%;
-}
-
-.container > .participants > div {
-    display: table-cell;
-    overflow-x: scroll;
-}
-
-.participant {
-    display: inline-block;
-    width: 14%;
-    height: 14%;
-    margin-right: 4%;
-    border: 1px solid black;
-}*/
