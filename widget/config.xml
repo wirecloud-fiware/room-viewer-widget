@@ -11,7 +11,7 @@
   <wiring>
     <outputendpoint name="participant" type="text" label="Participant join or leave room" description="A participant join or leave a room." friendcode="participant_change"/>
     <outputendpoint name="video_url" type="text" label="Send video URL to room" description="Send video URL to chat room widget." friendcode="video_url"/>
-    <outputendpoint name="terminate_stream" type="text" label="Terminates video stream" description="Event to terminate video stream when the user leaves the room"/>
+    <outputendpoint name="terminate_stream" type="text" label="Terminates video stream" description="Event to terminate video stream when the user leaves the room" friendcode="terminate_stream"/>
     <inputendpoint name="join_room" type="text" label="New participant" description="Send participant username and room name." friendcode="join_room"/>
   </wiring>
   <contents src="index.html"/>
