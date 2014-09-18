@@ -40,7 +40,7 @@ RoomViewer.prototype = {
   },
 
   onParticipantJoin: function (response) {
-    this.receiveVideo(response.params.name);
+    this.create_participant_video(response.params.name);
     MashupPlatform.wiring.pushEvent('participant', 'join_room');
   },
 
@@ -65,11 +65,9 @@ RoomViewer.prototype = {
     }
   },
 
-  receiveVideo: function (sender) {
-    var participant = new Participant(sender, this.client),
-        video       = participant.getVideoElement();
+  receiveVideo: function (participant) {
+    var video = participant.getVideoElement();
 
-    this.participants[sender] = participant;
     participant.rtcPeer = kwsUtils.WebRtcPeer.startRecvOnly(video,
         participant.offerToReceiveVideo.bind(participant));
     this.container.appendChild(participant.getElement());
@@ -110,10 +108,11 @@ RoomViewer.prototype = {
         console.log(username + ' registered in room ' + roomname);
         var participant = new Participant(username, this.client);
         this.participants[username] = participant;
-        result.value.forEach(this.add_participant.bind(this));
         participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(
             participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
-        result.value.forEach(this.receiveVideo.bind(this));
+        
+        result.value.forEach(this.create_participant_video.bind(this));
+        
         this.container.appendChild(participant.getElement());
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
       }.bind(this)
@@ -128,6 +127,8 @@ RoomViewer.prototype = {
   add_participant: function (participant_name) {
     var participant = new Participant(participant_name, this.client);
     this.participants[participant_name] = participant;
+
+    return participant;
   },
 
   leave_room: function () {
@@ -143,6 +144,11 @@ RoomViewer.prototype = {
     this.participants = [];
     this.update_roomname('');
     this.exists_prev_room = false;
+  },
+
+  create_participant_video: function (participant_name) {
+    var participant = this.add_participant(participant_name);
+    this.receiveVideo(participant);
   }
 
 };
