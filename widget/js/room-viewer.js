@@ -21,6 +21,7 @@ var RoomViewer = function () {
   this.container = document.getElementById('participant-list');
   this.participants = [];
   this.allow_recv   = false;
+  this.showInfoAlert();
   this.username = MashupPlatform.context.get('username');
   this.exists_prev_room = false;
 
@@ -100,6 +101,9 @@ RoomViewer.prototype = {
             }
         };
 
+        if (!this.participants.length) {
+          document.body.removeChild(document.body.firstChild);
+        }
         while (this.container.firstChild) {
           this.container.removeChild(this.container.firstChild);
         }
@@ -142,8 +146,18 @@ RoomViewer.prototype = {
       this.container.removeChild(this.container.firstChild);
     }
     this.participants = [];
+    this.showInfoAlert();
     this.update_roomname('');
     this.exists_prev_room = false;
+  },
+
+  showInfoAlert: function () {
+    var alert   = document.createElement('div'),
+        message = "The viewer is not connected to any room.";
+
+    alert.className = 'alert alert-info text-center';
+    alert.innerHTML = '<span class="fa fa-info-circle"></span> ' + message;
+    document.body.insertBefore(alert, this.container);
   },
 
   create_participant_video: function (participant_name) {
