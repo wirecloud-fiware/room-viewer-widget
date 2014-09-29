@@ -18,12 +18,13 @@ var RoomViewer = function () {
   this.client = new RpcBuilder.clients.JsonRpcClient(url,
     this.onRequest.bind(this), this.onOpen.bind(this));
 
+  this.allow_recv   = false;
+  this.exists_prev_room = false;
+
   this.container = document.getElementById('participant-list');
   this.participants = [];
-  this.allow_recv   = false;
   this.showInfoAlert();
   this.username = MashupPlatform.context.get('username');
-  this.exists_prev_room = false;
 
   var leave = document.getElementById('leave');
 
@@ -101,13 +102,11 @@ RoomViewer.prototype = {
             }
         };
 
-        if (!this.participants.length) {
-          document.body.removeChild(document.body.firstChild);
-        }
         while (this.container.firstChild) {
           this.container.removeChild(this.container.firstChild);
         }
         this.participants = []; 
+        this.hideInfoAlert();
 
         console.log(username + ' registered in room ' + roomname);
         var participant = new Participant(username, this.client);
@@ -158,6 +157,17 @@ RoomViewer.prototype = {
     alert.className = 'alert alert-info text-center';
     alert.innerHTML = '<span class="fa fa-info-circle"></span> ' + message;
     document.body.insertBefore(alert, this.container);
+  },
+
+  hideInfoAlert: function () {
+
+    var alert = document.querySelector('.alert');
+
+    if (!alert) {
+      return;
+    }
+
+    document.body.removeChild(alert);
   },
 
   create_participant_video: function (participant_name) {
