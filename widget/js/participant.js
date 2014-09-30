@@ -74,7 +74,7 @@ Participant.prototype = {
   offerToReceiveVideo: function (offerSdp, wp){
     console.log('Invoking SDP offer callback function');
     this.client.sendRequest("receiveVideoFrom",
-      {sender: name, sdpOffer: offerSdp},
+      {sender: this.username, sdpOffer: offerSdp},
       function (error, result) {
         if (error) return console.error(error);
         wp.processSdpAnswer(result.sdpAnswer);
