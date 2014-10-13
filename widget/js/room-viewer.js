@@ -97,7 +97,9 @@ var RoomViewer = function () {
   this.participants = [];
   this.showInfoAlert();
   this.username = MashupPlatform.context.get('username');
-  this.roomName = null;
+  this.roomName = MashupPlatform.mashup.context.get('name');;
+
+  this.join_room(this.username, this.roomName);
 
   var leave = document.getElementById('leave');
 
