@@ -79,30 +79,25 @@ var RoomViewer = function () {
   this.ws.sendMessage = function (message) {
     var jsonMessage = JSON.stringify(message);
     console.log('Senging message: ' + jsonMessage);
-    ws.send(jsonMessage);
-  }
-
-  this.ws.onopen = function () {
-    this.allow_recv = true;
+    this.send(jsonMessage);
   };
 
   window.onbeforeunload = function() {
-    ws.close();
+    this.ws.close();
   };
 
-  this.allow_recv   = false;
   this.exists_prev_room = false;
 
   this.container = document.getElementById('participant-list');
   this.participants = [];
   this.showInfoAlert();
   this.username = MashupPlatform.context.get('username');
-  this.roomName = MashupPlatform.mashup.context.get('name');;
-
-  this.join_room(this.username, this.roomName);
+  this.roomName = MashupPlatform.mashup.context.get('name');
 
   var leave = document.getElementById('leave');
+  var create = document.getElementById('create-room');
 
+  create.addEventListener('click', this.join_room.bind(this), true);
   leave.addEventListener('click', this.leave_room.bind(this), true);
   MashupPlatform.wiring.registerCallback('join_room',
     this.recv_data.bind(this));
@@ -153,24 +148,24 @@ RoomViewer.prototype = {
 
     var data = data.split(' ');
     this.exists_prev_room = true;
-    this.update_roomname(data[1]);
-    this.join_room(data[0], data[1]);
+    this.update_roomname();
+    this.join_room();
   },
 
-  join_room: function (username, roomName) {
+  join_room: function () {
     var message = {
       id: 'joinRoom',
       params: {
-        username: username,
-        roomName: roomName
+        username: this.username,
+        roomName: this.roomName
       }
     };
     this.ws.sendMessage(message);
   },
 
-  update_roomname: function (roomname) {
+  update_roomname: function () {
     var room = document.getElementById('name');
-    room.textContent = roomname;
+    room.textContent = this.roomName;
   },
 
   add_participant: function (participant_name) {
@@ -192,7 +187,7 @@ RoomViewer.prototype = {
     }
     this.participants = [];
     this.showInfoAlert();
-    this.update_roomname('');
+    this.update_roomname();
     this.exists_prev_room = false;
   },
 
