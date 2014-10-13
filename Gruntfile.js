@@ -29,7 +29,6 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.js\n<%= banner %>\n\n'
         },
         src: [
-          'widget/js/kws-rpc-builder.js',
           'widget/js/kws-utils.js',
           'widget/js/participant.js',
           'widget/js/room-viewer.js'

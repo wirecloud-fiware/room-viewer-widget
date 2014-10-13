@@ -13,10 +13,82 @@
  * @class
  */
 var RoomViewer = function () {
-  var url = 'ws://130.206.81.33:8080/groupcall/ws/websocket';
+  var url = 'ws://130.206.81.33:8080/call';
 
-  this.client = new RpcBuilder.clients.JsonRpcClient(url,
-    this.onRequest.bind(this), this.onOpen.bind(this));
+  this.ws = new WebSocket(url);
+  this.ws.onmessage = function (message) {
+    var parsedMessage = JSON.parse(message.data);
+    console.info('Received message: ' + message.data);
+
+    switch (parsedMessage.id) {
+      case 'joinRoomResponse':
+        var constraints = {
+            audio : true,
+            video : {
+                mandatory: {
+                    maxWidth     : 320,
+                    maxFrameRate : 15,
+                    minFrameRate : 15
+                }
+            }
+        };
+        while (this.container.firstChild) {
+          this.container.removeChild(this.container.firstChild);
+        }
+        this.participants = parsedMessage.params.participants; 
+        this.hideInfoAlert();
+
+        console.log(parsedMessage.response);
+        var participant = new Participant(this.username, this.ws);
+        this.participants[this.username] = participant;
+        participant.rtcPeer = kurentoUtils.WebRtcPeer.startSendOnly(
+            participant.getVideoElement(), function (offerSdp) {
+              console.log('Invoking SDP offer callback function');
+              var message = {
+                id: 'receiveVideoFrom',
+                params: {
+                  sender: participant.username,
+                  receiver: this.username,
+                  sdpOffer: offerSdp
+                }
+              };
+              this.ws.sendMessage(message);
+            }, null, constraints);
+        
+        result.value.forEach(this.create_participant_video.bind(this));
+        
+        this.container.appendChild(participant.getElement());
+        MashupPlatform.wiring.pushEvent('participant', 'join_room');
+        break;
+      case 'leaveRoomResponse':
+        MashupPlatform.wiring.pushEvent('participant', 'left_room');
+        MashupPlatform.wiring.pushEvent('terminate_stream', '');
+        console.log(parsedMessage.response);
+        break;
+      case 'receiveVideoResponse':
+        var participant = this.participants[parsedMessage.params.sender];
+        participant.rtcPeer.processSdpAnswer(parsedMessage.params.sdpAnswer);
+        break;
+      case 'error':
+        console.error(parsedMessage.message);
+        break;
+      default:
+    }
+  };
+
+  this.ws.sendMessage = function (message) {
+    var jsonMessage = JSON.stringify(message);
+    console.log('Senging message: ' + jsonMessage);
+    ws.send(jsonMessage);
+  }
+
+  this.ws.onopen = function () {
+    this.allow_recv = true;
+  };
+
+  window.onbeforeunload = function() {
+    ws.close();
+  };
 
   this.allow_recv   = false;
   this.exists_prev_room = false;
@@ -25,6 +97,7 @@ var RoomViewer = function () {
   this.participants = [];
   this.showInfoAlert();
   this.username = MashupPlatform.context.get('username');
+  this.roomName = null;
 
   var leave = document.getElementById('leave');
 
@@ -37,10 +110,7 @@ RoomViewer.prototype = {
 
   constructor: RoomViewer,
 
-  onOpen: function () {
-    this.allow_recv = true;
-  },
-
+  
   onParticipantJoin: function (response) {
     this.create_participant_video(response.params.name);
     MashupPlatform.wiring.pushEvent('participant', 'join_room');
@@ -54,24 +124,22 @@ RoomViewer.prototype = {
     MashupPlatform.wiring.pushEvent('participant', 'left_room');
   },
 
-  onRequest: function (response) {
-    switch (response.method) {
-      case 'newParticipantArrived':
-        this.onParticipantJoin(response);
-        break;
-      case 'participantLeft':
-        this.onParticipantLeft(response);
-        break;
-      default:
-        console.error('Method not recognized.');
-    }
-  },
-
   receiveVideo: function (participant) {
     var video = participant.getVideoElement();
 
-    participant.rtcPeer = kwsUtils.WebRtcPeer.startRecvOnly(video,
-        participant.offerToReceiveVideo.bind(participant));
+    participant.rtcPeer = kurentoUtils.WebRtcPeer.startRecvOnly(video,
+        function (sdpOffer) {
+          console.log('Invoking SDP offer callback function');
+          var message = {
+            id: 'receiveVideoFrom',
+            params: {
+              sender: participant.username,
+              receiver: this.username,
+              sdpOffer: offerSdp
+            }
+          };
+          this.ws.sendMessage(message);
+        });
     this.container.appendChild(participant.getElement());
   },
 
@@ -87,39 +155,15 @@ RoomViewer.prototype = {
     this.join_room(data[0], data[1]);
   },
 
-  join_room: function (username, roomname) {
-    this.client.sendRequest('joinRoom',
-      {name : username, room : roomname},
-      function (error, result) { 
-        var constraints = {
-            audio : true,
-            video : {
-                mandatory: {
-                    maxWidth     : 320,
-                    maxFrameRate : 15,
-                    minFrameRate : 15
-                }
-            }
-        };
-
-        while (this.container.firstChild) {
-          this.container.removeChild(this.container.firstChild);
-        }
-        this.participants = []; 
-        this.hideInfoAlert();
-
-        console.log(username + ' registered in room ' + roomname);
-        var participant = new Participant(username, this.client);
-        this.participants[username] = participant;
-        participant.rtcPeer = kwsUtils.WebRtcPeer.startSendOnly(
-            participant.getVideoElement(), participant.offerToReceiveVideo.bind(participant), null, constraints);
-        
-        result.value.forEach(this.create_participant_video.bind(this));
-        
-        this.container.appendChild(participant.getElement());
-        MashupPlatform.wiring.pushEvent('participant', 'join_room');
-      }.bind(this)
-    );
+  join_room: function (username, roomName) {
+    var message = {
+      id: 'joinRoom',
+      params: {
+        username: username,
+        roomName: roomName
+      }
+    };
+    this.ws.sendMessage(message);
   },
 
   update_roomname: function (roomname) {
@@ -128,7 +172,7 @@ RoomViewer.prototype = {
   },
 
   add_participant: function (participant_name) {
-    var participant = new Participant(participant_name, this.client);
+    var participant = new Participant(participant_name, this.ws);
     this.participants[participant_name] = participant;
 
     return participant;
@@ -140,7 +184,7 @@ RoomViewer.prototype = {
     };
     console.log('Participant ' + this.username + ' left the room');
     var participant = this.participants[this.username];
-    participant.dispose();
+    participant.dispose(this.roomName);
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
