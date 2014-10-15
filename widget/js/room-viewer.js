@@ -22,6 +22,7 @@ var RoomViewer = function () {
     console.info('Received message: ' + message.data);
 
     switch (parsedMessage.id) {
+
       case 'joinRoomResponse':
         var constraints = {
             audio : true,
@@ -61,18 +62,22 @@ var RoomViewer = function () {
         this.container.appendChild(participant.getElement());
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
         break;
+
       case 'leaveRoomResponse':
         MashupPlatform.wiring.pushEvent('participant', 'left_room');
         MashupPlatform.wiring.pushEvent('terminate_stream', '');
         console.log(parsedMessage.response);
         break;
+
       case 'receiveVideoResponse':
         var participant = this.participants[parsedMessage.params.sender];
         participant.rtcPeer.processSdpAnswer(parsedMessage.params.sdpAnswer);
         break;
+
       case 'error':
         console.error(parsedMessage.message);
         break;
+
       default:
     }
   }.bind(this);
@@ -126,7 +131,7 @@ RoomViewer.prototype = {
     var video = participant.getVideoElement();
 
     participant.rtcPeer = kurentoUtils.WebRtcPeer.startRecvOnly(video,
-        function (sdpOffer) {
+        function (offerSdp) {
           console.log('Invoking SDP offer callback function');
           var message = {
             id: 'receiveVideoFrom',
