@@ -16,6 +16,7 @@ var RoomViewer = function () {
   var url = 'ws://130.206.81.33:8080/call';
 
   this.ws = new WebSocket(url);
+  
   this.ws.onmessage = function (message) {
     var parsedMessage = JSON.parse(message.data);
     console.info('Received message: ' + message.data);
@@ -74,7 +75,7 @@ var RoomViewer = function () {
         break;
       default:
     }
-  };
+  }.bind(this);
 
   this.ws.sendMessage = function (message) {
     var jsonMessage = JSON.stringify(message);
