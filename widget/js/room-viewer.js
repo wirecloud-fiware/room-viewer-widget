@@ -32,7 +32,7 @@ var RoomViewer = function () {
                 }
             }
         };
-        while (this.container.firstChild) {
+        while (this.container.hasChildNodes()) {
           this.container.removeChild(this.container.firstChild);
         }
         this.participants = parsedMessage.params.participants; 
