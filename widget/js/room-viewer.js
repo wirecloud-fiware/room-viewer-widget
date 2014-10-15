@@ -56,7 +56,7 @@ var RoomViewer = function () {
               this.ws.sendMessage(message);
             }, null, constraints);
         
-        result.value.forEach(this.create_participant_video.bind(this));
+        this.participants.forEach(this.create_participant_video.bind(this));
         
         this.container.appendChild(participant.getElement());
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
@@ -138,7 +138,6 @@ RoomViewer.prototype = {
           };
           this.ws.sendMessage(message);
         });
-    this.container.appendChild(participant.getElement());
   },
 
   recv_data: function (data) {
