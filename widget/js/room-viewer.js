@@ -142,7 +142,7 @@ RoomViewer.prototype = {
             }
           };
           this.ws.sendMessage(message);
-        });
+        }.bind(this));
   },
 
   recv_data: function (data) {
