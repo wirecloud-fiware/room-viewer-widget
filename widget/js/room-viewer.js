@@ -60,6 +60,8 @@ var RoomViewer = function () {
         this.participants.forEach(this.create_participant_video.bind(this));
         
         this.container.appendChild(participant.getElement());
+        this.exists_prev_room = true;
+        this.update_roomname(this.roomName);
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
         break;
 
@@ -152,8 +154,6 @@ RoomViewer.prototype = {
     }
 
     var data = data.split(' ');
-    this.exists_prev_room = true;
-    this.update_roomname();
     this.join_room();
   },
 
@@ -168,9 +168,10 @@ RoomViewer.prototype = {
     this.ws.sendMessage(message);
   },
 
-  update_roomname: function () {
+  update_roomname: function (name) {
+    name = name || '';
     var room = document.getElementById('name');
-    room.textContent = this.roomName;
+    room.textContent = name;
   },
 
   add_participant: function (participant_name) {
