@@ -37,10 +37,11 @@ var RoomViewer = function () {
         while (this.container.hasChildNodes()) {
           this.container.removeChild(this.container.firstChild);
         }
-        this.participants = parsedMessage.params.participants; 
         this.hideInfoAlert();
-
+        this.participants = [];
+        var receivedParticipants = parsedMessage.params.participants;
         console.log(parsedMessage.response);
+        console.log(parsedMessage.params.participants);
         var participant = new Participant(this.username, this.ws);
         this.participants[this.username] = participant;
         participant.rtcPeer = kurentoUtils.WebRtcPeer.startSendOnly(
@@ -57,7 +58,9 @@ var RoomViewer = function () {
               this.ws.sendMessage(message);
             }, null, constraints);
         
-        this.participants.forEach(this.create_participant_video.bind(this));
+        for (var i = 0; i < receivedParticipants.length; i++) {
+          this.create_participant_video(receivedParticipants[i]);
+        }
         
         this.container.appendChild(participant.getElement());
         this.exists_prev_room = true;
@@ -176,6 +179,7 @@ RoomViewer.prototype = {
 
   add_participant: function (participant_name) {
     var participant = new Participant(participant_name, this.ws);
+    console.log('Participant: ' + participant.name);
     this.participants[participant_name] = participant;
 
     return participant;
@@ -218,7 +222,14 @@ RoomViewer.prototype = {
   },
 
   create_participant_video: function (participant_name) {
-    var participant = this.add_participant(participant_name);
+    var participant;
+    if (!this.participants[participant_name]) {
+      participant = this.add_participant(participant_name);
+    }
+    else {
+      participant = this.participants[participant_name];
+    }
+    console.log('Sender: ' + participant.username);
     this.receiveVideo(participant);
   }
 
