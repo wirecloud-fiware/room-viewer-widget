@@ -56,7 +56,7 @@ var RoomViewer = function () {
                 }
               };
               this.ws.sendMessage(message);
-            }, null, constraints);
+            }.bind(this), null, constraints);
         
         for (var i = 0; i < receivedParticipants.length; i++) {
           this.create_participant_video(receivedParticipants[i]);
