@@ -13,7 +13,7 @@
  * @class
  */
 var RoomViewer = function () {
-  var url = 'ws://130.206.81.33:8080/call';
+  var url = 'ws://130.206.81.33:8081/chatroom';
 
   this.ws = new WebSocket(url);
   
