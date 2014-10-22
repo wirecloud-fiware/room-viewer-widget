@@ -79,6 +79,14 @@ var RoomViewer = function () {
         participant.rtcPeer.processSdpAnswer(parsedMessage.params.sdpAnswer);
         break;
 
+      case 'participantJoin':
+        onParticipantJoin(parsedMessage.params.participantName);
+        break;
+
+      case 'participantLeft':
+        onParticipantLeft(parsedMessage.params.participantName);
+        break;
+
       case 'error':
         console.error(parsedMessage.message);
         break;
@@ -119,16 +127,16 @@ RoomViewer.prototype = {
   constructor: RoomViewer,
 
   
-  onParticipantJoin: function (response) {
-    this.create_participant_video(response.params.name);
+  onParticipantJoin: function (participantName) {
+    this.create_participant_video(participantName);
     MashupPlatform.wiring.pushEvent('participant', 'join_room');
   },
 
-  onParticipantLeft: function (response) {
-    console.log('Participant ' + response.params.name + ' left');
-    var participant = this.participants[response.params.name];
+  onParticipantLeft: function (participantName) {
+    console.log('Participant ' + participantName + ' left');
+    var participant = this.participants[participantName];
     participant.dispose();
-    delete this.participants[response.params.name];
+    delete this.participants[participantName];
     MashupPlatform.wiring.pushEvent('participant', 'left_room');
   },
 
