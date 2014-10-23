@@ -13,7 +13,7 @@
  * @class
  */
 var RoomViewer = function () {
-  var url = 'ws://130.206.81.33:8081/chatroom';
+  var url = 'ws://130.206.81.33:8081/call';
 
   this.ws = new WebSocket(url);
   
@@ -80,11 +80,11 @@ var RoomViewer = function () {
         break;
 
       case 'participantJoin':
-        onParticipantJoin(parsedMessage.params.participantName);
+        this.onParticipantJoin(parsedMessage.params.participantName);
         break;
 
       case 'participantLeft':
-        onParticipantLeft(parsedMessage.params.participantName);
+        this.onParticipantLeft(parsedMessage.params.participantName);
         break;
 
       case 'error':
@@ -129,14 +129,15 @@ RoomViewer.prototype = {
   
   onParticipantJoin: function (participantName) {
     this.create_participant_video(participantName);
+    console.log('Participant ' + participantName + ' joined');
     MashupPlatform.wiring.pushEvent('participant', 'join_room');
   },
 
   onParticipantLeft: function (participantName) {
-    console.log('Participant ' + participantName + ' left');
     var participant = this.participants[participantName];
     participant.dispose();
     delete this.participants[participantName];
+    console.log('Participant ' + participantName + ' left');
     MashupPlatform.wiring.pushEvent('participant', 'left_room');
   },
 
@@ -239,6 +240,7 @@ RoomViewer.prototype = {
     }
     console.log('Sender: ' + participant.username);
     this.receiveVideo(participant);
-  }
+    this.container.appendChild(participant.getElement());
+  },
 
 };
