@@ -48,13 +48,13 @@ var RoomViewer = function () {
             participant.getVideoElement(), function (offerSdp) {
               console.log('Invoking SDP offer callback function');
               var message = {
-                id: 'receiveVideoFrom',
+                id: 'startSend',
                 params: {
                   sender: participant.username,
-                  receiver: this.username,
                   sdpOffer: offerSdp
                 }
               };
+              console.log(message);
               this.ws.sendMessage(message);
             }.bind(this), null, constraints);
         
@@ -85,6 +85,10 @@ var RoomViewer = function () {
 
       case 'participantLeft':
         this.onParticipantLeft(parsedMessage.params.participantName);
+        break;
+
+      case 'startSendResponse':
+        this.participants[this.username].rtcPeer.processSdpAnswer(parsedMessage.params.sdpAnswer);
         break;
 
       case 'error':
@@ -143,7 +147,9 @@ RoomViewer.prototype = {
 
   receiveVideo: function (participant) {
     var video = participant.getVideoElement();
-
+    if (participant.username === this.username){
+      return;
+    }
     participant.rtcPeer = kurentoUtils.WebRtcPeer.startRecvOnly(video,
         function (offerSdp) {
           console.log('Invoking SDP offer callback function');
