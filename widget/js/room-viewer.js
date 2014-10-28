@@ -51,6 +51,7 @@ var RoomViewer = function () {
                 id: 'startSend',
                 params: {
                   sender: participant.username,
+                  roomName: this.roomName,
                   sdpOffer: offerSdp
                 }
               };
