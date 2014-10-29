@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="room_viewer" version="0.2.43">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="room_viewer" version="0.2.50">
   <details>
     <title>Chat Room Viewer</title>
     <email>bgrana@conwet.com</email>

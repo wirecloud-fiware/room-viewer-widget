@@ -24,46 +24,23 @@ var RoomViewer = function () {
     switch (parsedMessage.id) {
 
       case 'joinRoomResponse':
-        var constraints = {
-            audio : true,
-            video : {
-                mandatory: {
-                    maxWidth     : 320,
-                    maxFrameRate : 15,
-                    minFrameRate : 15
-                }
-            }
-        };
+
+        if (parsedMessage.params.sdpAnswer) {
+          this.participants[this.username].rtcPeer.processSdpAnswer(parsedMessage.params.sdpAnswer);
+        }
+        
         while (this.container.hasChildNodes()) {
           this.container.removeChild(this.container.firstChild);
         }
         this.hideInfoAlert();
-        this.participants = [];
         var receivedParticipants = parsedMessage.params.participants;
         console.log(parsedMessage.response);
-        console.log(parsedMessage.params.participants);
-        var participant = new Participant(this.username, this.ws);
-        this.participants[this.username] = participant;
-        participant.rtcPeer = kurentoUtils.WebRtcPeer.startSendOnly(
-            participant.getVideoElement(), function (offerSdp) {
-              console.log('Invoking SDP offer callback function');
-              var message = {
-                id: 'startSend',
-                params: {
-                  sender: participant.username,
-                  roomName: this.roomName,
-                  sdpOffer: offerSdp
-                }
-              };
-              console.log(message);
-              this.ws.sendMessage(message);
-            }.bind(this), null, constraints);
+        console.log('Participants: ' + parsedMessage.params.participants);
         
         for (var i = 0; i < receivedParticipants.length; i++) {
           this.create_participant_video(receivedParticipants[i]);
         }
         
-        this.container.appendChild(participant.getElement());
         this.exists_prev_room = true;
         this.update_roomname(this.roomName);
         MashupPlatform.wiring.pushEvent('participant', 'join_room');
@@ -86,10 +63,6 @@ var RoomViewer = function () {
 
       case 'participantLeft':
         this.onParticipantLeft(parsedMessage.params.participantName);
-        break;
-
-      case 'startSendResponse':
-        this.participants[this.username].rtcPeer.processSdpAnswer(parsedMessage.params.sdpAnswer);
         break;
 
       case 'error':
@@ -177,14 +150,44 @@ RoomViewer.prototype = {
   },
 
   join_room: function () {
-    var message = {
-      id: 'joinRoom',
-      params: {
-        username: this.username,
-        roomName: this.roomName
-      }
+
+    var constraints = {
+        audio : true,
+        video : {
+            mandatory: {
+                maxWidth     : 320,
+                maxFrameRate : 15,
+                minFrameRate : 15
+            }
+        }
     };
-    this.ws.sendMessage(message);
+
+    var participant = new Participant(this.username, this.ws);
+    this.participants[this.username] = participant;
+
+    participant.rtcPeer = kurentoUtils.WebRtcPeer.startSendOnly(
+      participant.getVideoElement(), function (offerSdp) {
+        console.log('Invoking SDP offer callback function');
+        var message = {
+          id: 'joinRoom',
+          params: {
+            username: participant.username,
+            roomName: this.roomName,
+            sdpOffer: offerSdp
+          }
+        };
+        this.ws.sendMessage(message);
+      }.bind(this), function (error) {
+        console.log(error);
+        var message = {
+          id: 'joinRoom',
+          params: {
+            username: participant.username,
+            roomName: this.roomName
+          }
+        };
+        this.ws.sendMessage(message);
+      }.bind(this), constraints);
   },
 
   update_roomname: function (name) {
@@ -195,7 +198,6 @@ RoomViewer.prototype = {
 
   add_participant: function (participant_name) {
     var participant = new Participant(participant_name, this.ws);
-    console.log('Participant: ' + participant.name);
     this.participants[participant_name] = participant;
 
     return participant;
