@@ -115,6 +115,7 @@ RoomViewer.prototype = {
     var participant = this.participants[participantName];
     participant.dispose();
     delete this.participants[participantName];
+    participant.getElement().remove();
     console.log('Participant ' + participantName + ' left');
     MashupPlatform.wiring.pushEvent('participant', 'left_room');
   },
@@ -209,7 +210,16 @@ RoomViewer.prototype = {
     };
     console.log('Participant ' + this.username + ' left the room');
     var participant = this.participants[this.username];
-    participant.dispose(this.roomName);
+    participant.dispose();
+    var message = {
+      id: 'leaveRoom',
+      params: {
+        participantName: this.username,
+        roomName: this.roomName
+      }
+    };
+
+    this.ws.sendMessage(message);
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }

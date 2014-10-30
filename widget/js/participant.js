@@ -48,18 +48,11 @@ Participant.prototype = {
 
   constructor: Participant,
 
-  dispose: function (roomName) {
+  dispose: function () {
     console.log('Disposing participant ' + this.username);
-
-    var message = {
-      id: 'leaveRoom',
-      params: {
-        participantName: this.username,
-        roomName: roomName
-      }
-    };
-
-    this.ws.sendMessage(message);    
+    if (this.rtcPeer) {
+      this.rtcPeer.dispose();
+    }
   },
 
   getElement: function () {
