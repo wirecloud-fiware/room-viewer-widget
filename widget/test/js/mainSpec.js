@@ -1,7 +1,7 @@
 var MashupPlatform = new MockMP.MockMP();
 MashupPlatform.setStrategy(MockMP.Strategy.EXCEPTION);
 
-describe('Test room-viewer-widget Constructor', function () {
+xdescribe('Test room-viewer-widget Constructor', function () {
     "use strict";
     var roomViewer = null;
     var username = 'Nombre';
