@@ -2,6 +2,7 @@
   "name": "room-viewer-widget",
   "homepage": "https://github.com/Wirecloud/room-viewer-widget",
   "version": "0.0.1",
+  "vendor": "CoNWeT",
   "author": "CoNWeT Lab., Universidad Politecnica de Madrid",
   "description": "A widget for managing chat rooms compatible with WireCloud.",
   "repository": {

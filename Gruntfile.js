@@ -78,7 +78,8 @@ module.exports = function(grunt) {
     compress: {
       widget: {
         options: {
-          archive: '<%= pkg.name %>.zip'
+          mode: 'zip',
+          archive: '<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
         },
         files: [
           {expand: true, src: ['**/*'], dest: './', cwd: 'widget'}
@@ -91,7 +92,7 @@ module.exports = function(grunt) {
         specs: 'widget/test/js/*Spec.js',
         helpers: 'widget/test/helpers/*.js'
       }
-    }
+    },
 
 
 
