@@ -33,6 +33,4 @@ describe('Test room-viewer-widget Constructor', function () {
 
         expect(MashupPlatform.wiring.registerCallback).toHaveBeenCalledWith('join_room', jasmine.any(Function));
     });
-
-    it('should create a span tag and ')
 });
