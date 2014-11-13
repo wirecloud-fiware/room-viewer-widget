@@ -84,13 +84,22 @@ module.exports = function(grunt) {
           {expand: true, src: ['**/*'], dest: './', cwd: 'widget'}
         ]
       }
+    },
+    jasmine: {
+      src: ['widget/js/*.js'],
+      options: {
+        specs: 'widget/test/js/*Spec.js',
+        helpers: 'widget/test/helpers/*.js'
+      }
     }
+
+
 
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-
+  grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
@@ -100,6 +109,6 @@ module.exports = function(grunt) {
   grunt.registerTask('css', ['less:dist', 'cssmin:dist']);
   grunt.registerTask('zip', ['compress:widget']);
 
-  grunt.registerTask('default', ['js', 'css', 'zip']);
+  grunt.registerTask('default', ['js', 'css', 'jasmine', 'zip']);
 
 };
