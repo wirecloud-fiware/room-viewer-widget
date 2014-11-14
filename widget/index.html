@@ -6,11 +6,6 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
   	<link rel="stylesheet" href="dist/css/room-viewer-widget.min.css">
-
-    <script src="https://rawgit.com/GoogleChrome/webrtc/master/samples/web/js/adapter.js"></script>
-    <script src="dist/js/room-viewer-widget.js"></script>
-    <script>window.onload = function () {var viewer = new RoomViewer();};</script>
-
   </head>
   <body>
     <div class="navbar navbar-default navbar-fixed-top">
@@ -19,11 +14,14 @@
         <button id="leave" type="button" class="btn btn-default navbar-btn navbar-right">
           <span class="fa fa-sign-out"></span>
         </button>
-        <button id="create-room" type="button" class="btn btn-default navbar-btn navbar-right">
+        <button id="create" type="button" class="btn btn-default navbar-btn navbar-right">
           <span class="fa fa-video-camera"></span>
         </button>
       </div><!-- /.container-fluid -->
     </div><!-- /.navbar -->
     <div id="participant-list" class="flex-container"></div>
+
+    <script src="https://rawgit.com/GoogleChrome/webrtc/master/samples/web/js/adapter.js"></script>
+    <script src="dist/js/room-viewer-widget.js"></script>
   </body>
 </html>
