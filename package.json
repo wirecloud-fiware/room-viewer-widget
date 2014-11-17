@@ -1,16 +1,16 @@
 {
-  "name": "room-viewer-widget",
-  "homepage": "https://github.com/Wirecloud/room-viewer-widget",
-  "version": "0.0.1",
+  "name": "Chat-Room-Viewer",
+  "homepage": "https://github.com/wirecloud-fiware/room-viewer-widget",
+  "version": "0.3.6-SNAPSHOT",
   "vendor": "CoNWeT",
   "author": "CoNWeT Lab., Universidad Politecnica de Madrid",
   "description": "A widget for managing chat rooms compatible with WireCloud.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Wirecloud/room-viewer-widget.git"
+    "url": "https://github.com/wirecloud-fiware/room-viewer-widget.git"
   },
   "bugs": {
-    "url": "https://github.com/Wirecloud/room-viewer-widget/issues"
+    "url": "https://github.com/wirecloud-fiware/room-viewer-widget/issues"
   },
   "keywords": [
     "wirecloud",
@@ -24,7 +24,7 @@
   },
   "license": {
     "type": "Apache v2",
-    "url": "https://github.com/Wirecloud/room-viewer-widget/blob/master/LICENSE"
+    "url": "http://www.apache.org/licenses/"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -33,6 +33,8 @@
     "grunt-contrib-cssmin": "^0.10.0",
     "grunt-contrib-less": "^0.11.4",
     "grunt-contrib-uglify": "^0.5.1",
-    "grunt-contrib-jasmine": "^0.8.1"
+    "grunt-contrib-jasmine": "^0.8.1",
+    "grunt-text-replace": "^0.3.12",
+    "grunt-contrib-clean": "^0.6.0"
   }
 }

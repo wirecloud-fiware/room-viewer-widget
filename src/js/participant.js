@@ -1,9 +1,8 @@
 /**
  * @file participant.js
- * @version 0.0.1
  * 
  * @copyright 2014 CoNWeT Lab., Universidad Politécnica de Madrid
- * @license Apache v2 (https://github.com/Wirecloud/room-viewer-widget/blob/master/LICENSE)
+ * @license Apache v2
  */
 
 

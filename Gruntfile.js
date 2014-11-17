@@ -3,7 +3,7 @@
  * @version 0.0.1
  * 
  * @copyright 2014 CoNWeT Lab., Universidad Politécnica de Madrid
- * @license Apache v2 (https://github.com/Wirecloud/room-manager-widget/blob/master/LICENSE)
+ * @license Apache v2 (https://github.com/Wirecloud/room-manager-src/blob/master/LICENSE)
  */
 
 module.exports = function(grunt) {
@@ -29,11 +29,11 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.js\n<%= banner %>\n\n'
         },
         src: [
-          'widget/js/kurento-utils.js',
-          'widget/js/participant.js',
-          'widget/js/room-viewer.js'
+          'src/js/kurento-utils.js',
+          'src/js/participant.js',
+          'src/js/room-viewer.js'
         ],
-        dest: 'widget/dist/js/<%= pkg.name %>.js'
+        dest: 'target/dist/js/<%= pkg.name %>.js'
       }
     },
 
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.min.js\n<%= banner %>\n'
         },
         src: '<%= concat.dist.dest %>',
-        dest: 'widget/dist/js/<%= pkg.name %>.min.js'
+        dest: 'target/dist/js/<%= pkg.name %>.min.js'
       }
     },
 
@@ -56,9 +56,9 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.css\n<%= banner %>\n\n'
         },
         src: [
-          'widget/less/widget.less'
+          'src/less/widget.less'
         ],
-        dest: 'widget/dist/css/<%= pkg.name %>.css'
+        dest: 'target/dist/css/<%= pkg.name %>.css'
       }
     },
 
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.min.css\n<%= banner %>\n'
         },
         src: '<%= less.dist.dest %>',
-        dest: 'widget/dist/css/<%= pkg.name %>.min.css'
+        dest: 'target/dist/css/<%= pkg.name %>.min.css'
       }
     },
 
@@ -79,22 +79,35 @@ module.exports = function(grunt) {
       widget: {
         options: {
           mode: 'zip',
-          archive: '<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
+          archive: 'target/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
         },
         files: [
-          {expand: true, src: ['**/*'], dest: './', cwd: 'widget'}
+          {expand: true, src: ['css/**', 'fonts/**', 'config.xml', 'index.html'], cwd: 'src'},
+          {expand: true, src: ['dist/**'], cwd: 'target'}
         ]
       }
     },
+    
     jasmine: {
-      src: ['widget/js/*.js'],
+      src: ['src/js/*.js'],
       options: {
-        specs: 'widget/test/js/*Spec.js',
-        helpers: 'widget/test/helpers/*.js'
+        specs: 'src/test/js/*Spec.js',
+        helpers: 'src/test/helpers/*.js'
       }
     },
 
+    replace: {
+      version: {
+        src: ['src/config.xml'],
+        overwrite: true,
+        replacements: [{
+          from: /version=\"[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?\"/g,
+          to: 'version="<%= pkg.version %>"'
+        }]
+      }
+    },
 
+    clean: ['target']
 
   });
 
@@ -103,13 +116,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
-
+  grunt.loadNpmTasks('grunt-text-replace');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
   grunt.registerTask('js', ['concat:dist', 'uglify:dist']);
   grunt.registerTask('css', ['less:dist', 'cssmin:dist']);
   grunt.registerTask('zip', ['compress:widget']);
+  grunt.registerTask('version', ['replace:version']);
 
-  grunt.registerTask('default', ['js', 'css', 'jasmine', 'zip']);
+  grunt.registerTask('default', ['js', 'css', 'version', 'jasmine', 'zip']);
 
 };
