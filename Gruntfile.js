@@ -130,6 +130,6 @@ module.exports = function(grunt) {
   grunt.registerTask('zip', ['compress:widget']);
   grunt.registerTask('version', ['replace:version']);
 
-  grunt.registerTask('default', ['js', 'css', 'version', 'jasmine', 'zip']);
+  grunt.registerTask('default', ['jshint', 'js', 'css', 'version', 'jasmine', 'zip']);
 
 };
