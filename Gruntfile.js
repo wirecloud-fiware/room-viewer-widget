@@ -126,10 +126,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
 
   grunt.registerTask('js', ['concat:dist', 'uglify:dist']);
+  grunt.registerTask('jsConcat', 'concat:dist');
   grunt.registerTask('css', ['less:dist', 'cssmin:dist']);
-  grunt.registerTask('zip', ['compress:widget']);
+  grunt.registerTask('zip', 'compress:widget');
   grunt.registerTask('version', ['replace:version']);
 
-  grunt.registerTask('default', ['jshint', 'js', 'css', 'version', 'jasmine', 'zip']);
-
+  // grunt.registerTask('default', ['jshint', 'js', 'css', 'version', 'jasmine', 'zip']);
+  grunt.registerTask('default', ['jshint', 'jsConcat', 'css', 'version', 'jasmine', 'zip']);
 };
