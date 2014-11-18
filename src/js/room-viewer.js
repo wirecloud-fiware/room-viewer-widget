@@ -101,7 +101,7 @@ var RoomViewer = (function() {
     leave.addEventListener('click', this.leave_room.bind(this), true);
     MashupPlatform.wiring.registerCallback('join_room',
         this.recv_data.bind(this));
-  };
+  }
 
   RoomViewer.prototype = {
 

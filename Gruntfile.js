@@ -33,7 +33,7 @@ module.exports = function(grunt) {
           'src/js/participant.js',
           'src/js/room-viewer.js'
         ],
-        dest: 'target/js/<%= pkg.name %>.js'
+        dest: 'build/js/<%= pkg.name %>.js'
       }
     },
 
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.min.js\n<%= banner %>\n'
         },
         src: '<%= concat.dist.dest %>',
-        dest: 'target/js/<%= pkg.name %>.min.js'
+        dest: 'build/js/<%= pkg.name %>.min.js'
       }
     },
 
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
         src: [
           'src/less/widget.less'
         ],
-        dest: 'target/css/<%= pkg.name %>.css'
+        dest: 'build/css/<%= pkg.name %>.css'
       }
     },
 
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.min.css\n<%= banner %>\n'
         },
         src: '<%= less.dist.dest %>',
-        dest: 'target/css/<%= pkg.name %>.min.css'
+        dest: 'build/css/<%= pkg.name %>.min.css'
       }
     },
 
@@ -79,11 +79,11 @@ module.exports = function(grunt) {
       widget: {
         options: {
           mode: 'zip',
-          archive: 'target/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
+          archive: 'build/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
         },
         files: [
           {expand: true, src: ['lib/**/*', 'fonts/**', 'config.xml', 'index.html'], cwd: 'src'},
-          {expand: true, src: ['js/**/*', 'css/**/*'], cwd: 'target'}
+          {expand: true, src: ['js/**/*', 'css/**/*'], cwd: 'build'}
         ]
       }
     },
@@ -107,7 +107,11 @@ module.exports = function(grunt) {
       }
     },
 
-    clean: ['target']
+    clean: ['build'],
+
+    jshint: {
+      all: ['src/js/**/*', 'src/test/**/*', '!src/js/kurento-utils.js', 'Gruntfile.js']
+    }
 
   });
 
@@ -119,6 +123,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   grunt.registerTask('js', ['concat:dist', 'uglify:dist']);
   grunt.registerTask('css', ['less:dist', 'cssmin:dist']);
