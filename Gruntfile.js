@@ -33,7 +33,7 @@ module.exports = function(grunt) {
           'src/js/participant.js',
           'src/js/room-viewer.js'
         ],
-        dest: 'target/dist/js/<%= pkg.name %>.js'
+        dest: 'target/js/<%= pkg.name %>.js'
       }
     },
 
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.min.js\n<%= banner %>\n'
         },
         src: '<%= concat.dist.dest %>',
-        dest: 'target/dist/js/<%= pkg.name %>.min.js'
+        dest: 'target/js/<%= pkg.name %>.min.js'
       }
     },
 
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
         src: [
           'src/less/widget.less'
         ],
-        dest: 'target/dist/css/<%= pkg.name %>.css'
+        dest: 'target/css/<%= pkg.name %>.css'
       }
     },
 
@@ -71,7 +71,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.min.css\n<%= banner %>\n'
         },
         src: '<%= less.dist.dest %>',
-        dest: 'target/dist/css/<%= pkg.name %>.min.css'
+        dest: 'target/css/<%= pkg.name %>.min.css'
       }
     },
 
@@ -82,8 +82,8 @@ module.exports = function(grunt) {
           archive: 'target/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
         },
         files: [
-          {expand: true, src: ['css/**', 'fonts/**', 'config.xml', 'index.html'], cwd: 'src'},
-          {expand: true, src: ['dist/**'], cwd: 'target'}
+          {expand: true, src: ['lib/**/*', 'fonts/**', 'config.xml', 'index.html'], cwd: 'src'},
+          {expand: true, src: ['js/**/*', 'css/**/*'], cwd: 'target'}
         ]
       }
     },
