@@ -79,7 +79,7 @@ module.exports = function(grunt) {
       widget: {
         options: {
           mode: 'zip',
-          archive: 'build/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>.wgt'
+          archive: 'build/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>-build<%= grunt.template.today("yymmdd") %>.wgt'
         },
         files: [
           {expand: true, src: ['lib/**/*', 'fonts/**', 'config.xml', 'index.html'], cwd: 'src'},
