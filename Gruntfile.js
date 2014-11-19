@@ -19,7 +19,6 @@ module.exports = function(grunt) {
             ' * @copyright 2014 <%= pkg.author %>\n' +
             ' * @license <%= pkg.license.type %> (<%= pkg.license.url %>)\n' +
             ' */',
-
     concat: {
       options: {
         stripBanners: true
@@ -29,7 +28,7 @@ module.exports = function(grunt) {
           banner: '/*!\n * @file <%= pkg.name %>.js\n<%= banner %>\n\n'
         },
         src: [
-          'src/js/kurento-utils.js',
+          'src/js/main.js',
           'src/js/participant.js',
           'src/js/room-viewer.js'
         ],
@@ -79,7 +78,7 @@ module.exports = function(grunt) {
       widget: {
         options: {
           mode: 'zip',
-          archive: 'build/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>-build<%= grunt.template.today("yymmdd") %>.wgt'
+          archive: 'build/<%= pkg.vendor %>_<%= pkg.name %>_<%= pkg.version %>-SNAPSHOT.wgt'
         },
         files: [
           {expand: true, src: ['lib/**/*', 'fonts/**', 'config.xml', 'index.html'], cwd: 'src'},
@@ -101,7 +100,7 @@ module.exports = function(grunt) {
         src: ['src/config.xml'],
         overwrite: true,
         replacements: [{
-          from: /version=\"[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?\"/g,
+          from: /version=\"[0-9]+\.[0-9]+\.[0-9]+(-dev)?\"/g,
           to: 'version="<%= pkg.version %>"'
         }]
       }
